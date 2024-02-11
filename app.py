@@ -107,51 +107,54 @@ def readTextUsingHuggingFacePDF(text):
 
 
 # Designing the interface using streamlit
-choice = st.sidebar.selectbox("Select your choice", ["Upload Document","Paste Text","Using Hugging Face(document)","Using Hugging Face(text)"])
+def main():
+    choice = st.sidebar.selectbox("Select your choice", ["Upload Document","Paste Text","Using Hugging Face(document)","Using Hugging Face(text)"])
 
-if choice == "Upload Document":
-    st.subheader("Summarize Document")
-    input_file = st.file_uploader("Upload Your File", type=["pdf"])
-    if input_file is not None:
-        if st.button("Summarise Document"):
-            result_text = readPdfFile(input_file)
+    if choice == "Upload Document":
+        st.subheader("Summarize Document")
+        input_file = st.file_uploader("Upload Your File", type=["pdf"])
+        if input_file is not None:
+            if st.button("Summarise Document"):
+                result_text = readPdfFile(input_file)
+                with st.container():
+                    st.markdown("Title")
+                    st.info(result_text[0])
+                with st.container():
+                    st.markdown("Summarized text") 
+                    st.info(result_text[1])
+                    
+    elif choice == "Paste Text":
+        st.subheader("Summarize Text")
+        input_text = st.text_area("Enter Your Text")
+        if st.button("Summarize text"):
+            final_text = readTextFile(input_text)
             with st.container():
                 st.markdown("Title")
-                st.info(result_text[0])
+                st.info(final_text[0])
             with st.container():
-                st.markdown("Summarized text") 
-                st.info(result_text[1])
+                st.markdown("Summarized Text")
+                st.info(final_text[1])
+
+    elif choice == "Using Hugging Face(document)":
+        st.subheader("Summarize Document")
+        input_file = st.file_uploader("Upload Your File", type=["pdf"])
+        if input_file is not None:
+            if st.button("Summarise Document"):
+                result_text = extractText(input_file)
+                with st.container():
+                    st.markdown("Summarized text") 
+                    st.info(result_text[0]['summary_text'])
+
+    elif choice == "Using Hugging Face(text)":
+        st.subheader("Summarize Text")
+        input_text = st.text_area("Enter Your Text")
+        if st.button("Summarize text"):
+            final_text = readTextUsingHuggingFacePDF(input_text)
+            with st.container():
+                st.markdown("Summarized Text")
+                st.info(final_text[0]['summary_text'])
                 
-elif choice == "Paste Text":
-    st.subheader("Summarize Text")
-    input_text = st.text_area("Enter Your Text")
-    if st.button("Summarize text"):
-        final_text = readTextFile(input_text)
-        with st.container():
-            st.markdown("Title")
-            st.info(final_text[0])
-        with st.container():
-            st.markdown("Summarized Text")
-            st.info(final_text[1])
 
-elif choice == "Using Hugging Face(document)":
-    st.subheader("Summarize Document")
-    input_file = st.file_uploader("Upload Your File", type=["pdf"])
-    if input_file is not None:
-        if st.button("Summarise Document"):
-            result_text = extractText(input_file)
-            with st.container():
-                st.markdown("Summarized text") 
-                st.info(result_text[0]['summary_text'])
-
-elif choice == "Using Hugging Face(text)":
-    st.subheader("Summarize Text")
-    input_text = st.text_area("Enter Your Text")
-    if st.button("Summarize text"):
-        final_text = readTextUsingHuggingFacePDF(input_text)
-        with st.container():
-            st.markdown("Summarized Text")
-            st.info(final_text[0]['summary_text'])
-
-
+if __name__ == "__main__":
+    main()
 
